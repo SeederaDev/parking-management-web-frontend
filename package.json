@@ -1,0 +1,26 @@
+{
+  "name": "web-frontend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@pinia/nuxt": "^0.9.0",
+    "pinia": "^2.3.0",
+    "pinia-plugin-persistedstate": "^3.2.0"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^0.7.0",
+    "@nuxtjs/tailwindcss": "^6.12.0",
+    "nuxt": "^4.0.0",
+    "typescript": "^5.4.0",
+    "vue": "^3.4.0",
+    "vue-router": "^4.4.0"
+  }
+}
