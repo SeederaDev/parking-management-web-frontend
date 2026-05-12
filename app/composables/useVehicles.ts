@@ -1,19 +1,6 @@
-export interface Vehicle {
-  id: string;
-  name: string;
-  model: string;
-  description: string;
-  price_per_day: string;
-  is_available: boolean;
-  images: Array<{ id: string; image: string; is_primary: boolean }>;
-  created_at: string;
-  updated_at: string;
-}
+import type { Vehicle, VehicleCreate, PaginatedResponse } from "~/types";
 
-interface PaginatedResponse<T> {
-  count: number;
-  results: T[];
-}
+export type { Vehicle };
 
 export const useVehicles = () => {
   const api = useApi();
@@ -36,9 +23,7 @@ export const useVehicles = () => {
     }
   }
 
-  async function createVehicle(
-    payload: Omit<Vehicle, "id" | "images" | "created_at" | "updated_at">,
-  ) {
+  async function createVehicle(payload: VehicleCreate) {
     return api<Vehicle>("/vehicles/", { method: "POST", body: payload });
   }
 

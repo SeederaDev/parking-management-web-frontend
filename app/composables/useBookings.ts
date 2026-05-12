@@ -1,11 +1,4 @@
-import type { Booking, BookingCreate } from "~/stores/booking";
-
-interface PaginatedResponse<T> {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: T[];
-}
+import type { Booking, BookingCreate, PaginatedResponse } from "~/types";
 
 export const useBookings = () => {
   const api = useApi();

@@ -1,21 +1,7 @@
 import { defineStore } from "pinia";
+import type { ParkingLocation, ParkingSpot } from "~/types";
 
-export interface ParkingLocation {
-  id: string;
-  name: string;
-  address: string;
-  total_spots: number;
-  available_spots: number;
-  created_at: string;
-}
-
-export interface ParkingSpot {
-  id: string;
-  identifier: string;
-  spot_type: "standard" | "disabled" | "ev" | "vip";
-  status: "free" | "occupied" | "reserved";
-  location: string;
-}
+export type { ParkingLocation, ParkingSpot };
 
 export const useParkingStore = defineStore("parking", () => {
   const locations = ref<ParkingLocation[]>([]);

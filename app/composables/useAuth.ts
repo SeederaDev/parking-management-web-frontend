@@ -1,23 +1,4 @@
-import type { User } from "~/stores/auth";
-
-interface LoginPayload {
-  email: string;
-  password: string;
-}
-
-interface RegisterPayload {
-  email: string;
-  password: string;
-  first_name: string;
-  last_name: string;
-  tenant_slug: string;
-}
-
-interface AuthResponse {
-  access: string;
-  refresh: string;
-  user: User;
-}
+import type { LoginPayload, RegisterPayload, AuthResponse } from "~/types";
 
 export const useAuth = () => {
   const api = useApi();

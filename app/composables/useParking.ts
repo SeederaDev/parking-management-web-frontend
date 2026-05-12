@@ -1,17 +1,9 @@
-import type { ParkingLocation, ParkingSpot } from "~/stores/parking";
-
-interface AvailabilityQuery {
-  location_id: string;
-  start_time: string; // ISO-8601
-  end_time: string; // ISO-8601
-}
-
-interface PaginatedResponse<T> {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: T[];
-}
+import type {
+  ParkingLocation,
+  ParkingSpot,
+  AvailabilityQuery,
+  PaginatedResponse,
+} from "~/types";
 
 export const useParking = () => {
   const api = useApi();

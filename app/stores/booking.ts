@@ -1,30 +1,7 @@
 import { defineStore } from "pinia";
+import type { Booking, BookingCreate } from "~/types";
 
-export interface Booking {
-  id: string;
-  tenant: string;
-  user: string;
-  user_email: string;
-  spot: string;
-  spot_identifier: string;
-  location_name: string;
-  vehicle: string | null;
-  start_time: string;
-  end_time: string;
-  price: string;
-  status: "pending" | "paid" | "cancelled";
-  stripe_session_id: string | null;
-  stripe_payment_intent_id: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface BookingCreate {
-  spot: string;
-  vehicle?: string | null;
-  start_time: string;
-  end_time: string;
-}
+export type { Booking, BookingCreate };
 
 export const useBookingStore = defineStore("booking", () => {
   const bookings = ref<Booking[]>([]);
