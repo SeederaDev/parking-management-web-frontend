@@ -33,12 +33,16 @@ async function silentRefresh(
 
   _refreshPromise = (async () => {
     try {
-      const data = await $fetch<{ access: string }>("/auth/refresh/", {
-        baseURL: apiBase,
-        method: "POST",
-        body: { refresh: authStore.refreshToken },
-      });
+      const data = await $fetch<{ access: string; refresh?: string }>(
+        "/auth/refresh/",
+        {
+          baseURL: apiBase,
+          method: "POST",
+          body: { refresh: authStore.refreshToken },
+        },
+      );
       authStore.accessToken = data.access;
+      if (data.refresh) authStore.refreshToken = data.refresh;
       return true;
     } catch {
       return false;

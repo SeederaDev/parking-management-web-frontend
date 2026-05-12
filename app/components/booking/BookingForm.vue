@@ -285,7 +285,3 @@ async function confirmBooking() {
   navigateTo(`/booking/payment?booking_id=${booking.id}`);
 }
 </script>
-
-
-onMounted(() => fetchVehicles(true));
-</script>

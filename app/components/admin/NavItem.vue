@@ -1,22 +1,23 @@
 <template>
   <NuxtLink
     :to="to"
-    class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+    class="flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors group"
     :class="
       isActive
-        ? 'bg-indigo-50 text-indigo-700'
-        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+        ? 'bg-white/10 text-white'
+        : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
     "
   >
-    <span class="text-base leading-none">{{ icon }}</span>
-    <span>{{ label }}</span>
+    <span class="shrink-0 w-[18px] h-[18px] flex items-center justify-center">
+      <slot name="icon" />
+    </span>
+    <span class="font-medium">{{ label }}</span>
   </NuxtLink>
 </template>
 
 <script setup lang="ts">
 const props = defineProps<{
   to: string;
-  icon: string;
   label: string;
   exact?: boolean;
 }>();
