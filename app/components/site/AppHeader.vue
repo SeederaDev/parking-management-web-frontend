@@ -35,6 +35,12 @@ watch(
   () => route.path,
   () => closeMobile()
 );
+
+const authStore = useAuthStore();
+const { logout } = useAuth();
+async function handleLogout() {
+  await logout();
+}
 </script>
 
 <template>
@@ -65,6 +71,21 @@ watch(
             {{ page.label }}
           </NuxtLink>
         </div>
+        <div class="nav-auth">
+          <template v-if="authStore.isAuthenticated">
+            <NuxtLink
+              v-if="authStore.isAdmin"
+              to="/dashboard"
+              class="nav-auth-link"
+              >Dashboard</NuxtLink
+            >
+            <NuxtLink to="/booking" class="nav-auth-link"
+              >Prenotazioni</NuxtLink
+            >
+            <button class="nav-auth-btn" @click="handleLogout">Esci</button>
+          </template>
+          <NuxtLink v-else to="/login" class="nav-auth-btn">Accedi</NuxtLink>
+        </div>
         <button
           class="hamburger"
           type="button"
@@ -88,6 +109,12 @@ watch(
       <NuxtLink v-for="page in sitePages" :key="page.path" :to="page.path">{{
         page.label
       }}</NuxtLink>
+      <template v-if="authStore.isAuthenticated">
+        <NuxtLink v-if="authStore.isAdmin" to="/dashboard">Dashboard</NuxtLink>
+        <NuxtLink to="/booking">Prenotazioni</NuxtLink>
+        <button class="mobile-logout" @click="handleLogout">Esci</button>
+      </template>
+      <NuxtLink v-else to="/login">Accedi</NuxtLink>
     </div>
   </header>
 </template>

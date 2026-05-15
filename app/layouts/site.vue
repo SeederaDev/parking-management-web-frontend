@@ -1394,4 +1394,214 @@ footer ul a:hover {
     right: 12px;
   }
 }
+
+/* ── Booking widget ─────────────────────────────────── */
+.booking-widget {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--gray-100);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.07);
+  max-width: 740px;
+  margin-top: 40px;
+}
+.booking-loc {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--gray-100);
+}
+.booking-loc svg {
+  color: var(--red);
+  flex-shrink: 0;
+}
+.booking-loc select {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-family: var(--font);
+  font-size: 15px;
+  color: var(--gray-700);
+  background: transparent;
+}
+.booking-dates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--gray-100);
+}
+.booking-date-col {
+  padding: 16px 24px;
+}
+.booking-date-col + .booking-date-col {
+  border-left: 1px solid var(--gray-100);
+}
+.booking-date-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--gray-400);
+  margin-bottom: 10px;
+}
+.booking-date-col input {
+  display: block;
+  width: 100%;
+  border: 1.5px solid var(--gray-100);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--gray-800);
+  outline: none;
+  margin-bottom: 8px;
+  background: var(--off-white);
+  transition: border-color 0.2s;
+}
+.booking-date-col input:last-child {
+  margin-bottom: 0;
+}
+.booking-date-col input:focus {
+  border-color: var(--navy);
+  background: white;
+}
+.booking-vtypes {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+.booking-vt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 14px 0;
+  cursor: pointer;
+  transition: background 0.2s;
+  flex: 1;
+  border-right: 1px solid var(--gray-100);
+}
+.booking-vt:last-child {
+  border-right: none;
+}
+.booking-vt.active {
+  background: rgba(27, 42, 107, 0.05);
+}
+.booking-vt-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+.booking-vt-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gray-400);
+}
+.booking-vt.active .booking-vt-label {
+  color: var(--navy);
+}
+.booking-footer {
+  padding: 16px 24px;
+}
+
+/* ── Nav auth ───────────────────────────────────────── */
+.nav-auth {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.nav-auth-link {
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 8px;
+  transition: all 0.25s;
+}
+.nav:not(.solid) .nav-auth-link {
+  color: rgba(255, 255, 255, 0.8);
+}
+.nav:not(.solid) .nav-auth-link:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+.nav.solid .nav-auth-link {
+  color: var(--gray-600);
+}
+.nav.solid .nav-auth-link:hover {
+  color: var(--navy);
+  background: var(--off-white);
+}
+.nav-auth-btn {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all 0.25s;
+  border: 1.5px solid;
+  background: transparent;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+.nav:not(.solid) .nav-auth-btn {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+.nav:not(.solid) .nav-auth-btn:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.08);
+}
+.nav.solid .nav-auth-btn {
+  border-color: var(--gray-200);
+  color: var(--navy);
+}
+.nav.solid .nav-auth-btn:hover {
+  border-color: var(--navy);
+  background: rgba(27, 42, 107, 0.05);
+}
+.mobile-menu button.mobile-logout {
+  background: none;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 22px;
+  font-weight: 600;
+  padding: 12px 32px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: var(--display);
+  transition: 0.2s;
+  margin-top: 8px;
+}
+.mobile-menu button.mobile-logout:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+@media (max-width: 960px) {
+  .nav-auth {
+    display: none;
+  }
+}
+@media (max-width: 640px) {
+  .booking-dates {
+    grid-template-columns: 1fr;
+  }
+  .booking-date-col + .booking-date-col {
+    border-left: none;
+    border-top: 1px solid var(--gray-100);
+  }
+}
 </style>

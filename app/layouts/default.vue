@@ -6,26 +6,14 @@
         <div class="flex items-center justify-between h-15">
           <!-- Logo -->
           <NuxtLink to="/" class="flex items-center gap-2 shrink-0">
-            <div
-              class="w-7 h-7 bg-blue-600 rounded-md flex items-center justify-center"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-3.5 w-3.5 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="2"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"
-                />
-              </svg>
-            </div>
-            <span class="font-semibold text-sm text-gray-900 tracking-tight"
-              >ParkManager</span
+            <img
+              src="/logo.avif"
+              alt="Palmieri &amp; Treglia"
+              class="h-9 w-auto"
+            />
+            <span
+              class="font-semibold text-sm text-gray-900 tracking-tight hidden sm:block"
+              >Palmieri &amp; Treglia</span
             >
           </NuxtLink>
 
@@ -39,7 +27,7 @@
             <NuxtLink
               to="/parking"
               class="hover:text-gray-900 transition-colors"
-              >Parcheggi a Roma</NuxtLink
+              >Parcheggi</NuxtLink
             >
             <NuxtLink
               v-if="authStore.isAuthenticated"
@@ -47,10 +35,14 @@
               class="hover:text-gray-900 transition-colors"
               >Servizi</NuxtLink
             >
-            <NuxtLink to="/" class="hover:text-gray-900 transition-colors"
+            <NuxtLink
+              to="/chi-siamo"
+              class="hover:text-gray-900 transition-colors"
               >Chi Siamo</NuxtLink
             >
-            <NuxtLink to="/" class="hover:text-gray-900 transition-colors"
+            <NuxtLink
+              to="/contatti"
+              class="hover:text-gray-900 transition-colors"
               >Contatti</NuxtLink
             >
           </div>
@@ -84,7 +76,7 @@
               >
               <NuxtLink
                 to="/register"
-                class="font-medium bg-blue-600 text-white px-4 py-1.5 rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                class="font-medium bg-[#1B2A6B] text-white px-4 py-1.5 rounded-lg hover:bg-[#0E1840] transition-colors text-sm"
                 >Registrati</NuxtLink
               >
             </template>
@@ -106,30 +98,16 @@
         class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3"
       >
         <div class="flex items-center gap-2">
-          <div
-            class="w-5 h-5 bg-blue-600 rounded flex items-center justify-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-2.5 w-2.5 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="2"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"
-              />
-            </svg>
-          </div>
-          <span class="font-medium text-gray-600">ParkManager</span>
-          <span>— Via Roma, 1 — Roma, Italy</span>
+          <img
+            src="/logo.avif"
+            alt="Palmieri &amp; Treglia"
+            class="h-6 w-auto"
+          />
+          <span class="font-medium text-gray-600">Palmieri &amp; Treglia</span>
         </div>
         <span
-          >© {{ new Date().getFullYear() }} ParkManager. Tutti i diritti
-          riservati.</span
+          >© {{ new Date().getFullYear() }} Palmieri &amp; Treglia s.r.l. Tutti
+          i diritti riservati.</span
         >
       </div>
     </footer>
