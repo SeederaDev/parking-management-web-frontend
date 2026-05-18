@@ -1,24 +1,17 @@
 <template>
-  <div class="max-w-2xl mx-auto px-6 py-10">
-    <h1 class="text-2xl font-bold text-indigo-600 mb-6">
-      Trova il tuo parcheggio
-    </h1>
+  <div class="max-w-2xl mx-auto px-6 py-16">
+    <div class="sec-label mb-2">Disponibilità</div>
+    <h1 class="sec-title mb-10">Trova il tuo posto</h1>
 
     <!-- Location -->
-    <div
-      class="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-3.5 mb-5"
-    >
-      <span class="text-indigo-600 shrink-0">📍</span>
+    <div class="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-3.5 mb-5">
+      <svg width="18" height="18" class="shrink-0" style="color:var(--red)"><use href="#ic-pin" /></svg>
       <select
         v-model="query.location_id"
         class="flex-1 outline-none text-sm text-gray-700 font-medium bg-transparent"
       >
         <option value="">Seleziona parcheggio…</option>
-        <option
-          v-for="loc in parkingStore.locations"
-          :key="loc.id"
-          :value="loc.id"
-        >
+        <option v-for="loc in parkingStore.locations" :key="loc.id" :value="loc.id">
           {{ loc.name }}
         </option>
       </select>
@@ -27,172 +20,91 @@
     <!-- Date/time -->
     <div class="grid grid-cols-2 gap-4 mb-5">
       <div>
-        <div
-          class="text-xs font-bold text-center text-gray-400 uppercase tracking-widest mb-3"
-        >
-          Ingresso
-        </div>
-        <div
-          class="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2.5 mb-2"
-        >
+        <div class="text-xs font-bold text-center text-gray-400 uppercase tracking-widest mb-3">Ingresso</div>
+        <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2.5 mb-2">
           <span class="text-gray-400 text-sm shrink-0">📅</span>
-          <input
-            v-model="query.start_date"
-            type="date"
-            class="flex-1 text-sm outline-none text-gray-600 min-w-0"
-          />
+          <input v-model="query.start_date" type="date" class="flex-1 text-sm outline-none text-gray-600 min-w-0" />
         </div>
-        <div
-          class="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2.5"
-        >
+        <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2.5">
           <span class="text-gray-400 text-sm shrink-0">🕐</span>
-          <input
-            v-model="query.start_time"
-            type="time"
-            class="flex-1 text-sm outline-none text-gray-600 min-w-0"
-          />
+          <input v-model="query.start_time" type="time" class="flex-1 text-sm outline-none text-gray-600 min-w-0" />
         </div>
       </div>
       <div>
-        <div
-          class="text-xs font-bold text-center text-gray-400 uppercase tracking-widest mb-3"
-        >
-          Uscita
-        </div>
-        <div
-          class="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2.5 mb-2"
-        >
+        <div class="text-xs font-bold text-center text-gray-400 uppercase tracking-widest mb-3">Uscita</div>
+        <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2.5 mb-2">
           <span class="text-gray-400 text-sm shrink-0">📅</span>
-          <input
-            v-model="query.end_date"
-            type="date"
-            class="flex-1 text-sm outline-none text-gray-600 min-w-0"
-          />
+          <input v-model="query.end_date" type="date" class="flex-1 text-sm outline-none text-gray-600 min-w-0" />
         </div>
-        <div
-          class="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2.5"
-        >
+        <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2.5">
           <span class="text-gray-400 text-sm shrink-0">🕐</span>
-          <input
-            v-model="query.end_time"
-            type="time"
-            class="flex-1 text-sm outline-none text-gray-600 min-w-0"
-          />
+          <input v-model="query.end_time" type="time" class="flex-1 text-sm outline-none text-gray-600 min-w-0" />
         </div>
       </div>
     </div>
 
-    <!-- Vehicle type radio -->
-    <div
-      class="flex justify-around bg-white border border-gray-200 rounded-xl px-4 py-4 mb-5"
-    >
+    <!-- Vehicle type -->
+    <div class="flex justify-around bg-white border border-gray-200 rounded-xl px-4 py-4 mb-5">
       <label v-for="vt in vehicleTypes" :key="vt.value" class="cursor-pointer">
-        <input
-          type="radio"
-          v-model="query.vehicle_type"
-          :value="vt.value"
-          class="sr-only"
-        />
+        <input type="radio" v-model="query.vehicle_type" :value="vt.value" class="sr-only" />
         <div
           class="w-12 h-12 rounded-full border-2 flex items-center justify-center text-2xl transition-all"
-          :class="
-            query.vehicle_type === vt.value
-              ? 'border-indigo-600 bg-indigo-50'
-              : 'border-gray-200 opacity-40'
-          "
+          :class="query.vehicle_type === vt.value ? 'border-navy bg-navy/5' : 'border-gray-200 opacity-40'"
         >
           {{ vt.icon }}
         </div>
       </label>
     </div>
 
-    <p v-if="parkingError" class="text-red-500 text-sm mb-4">
-      {{ parkingError }}
-    </p>
+    <p v-if="parkingError" class="text-brand-red text-sm mb-4">{{ parkingError }}</p>
 
-    <!-- Calcola button -->
     <button
       :disabled="!canSearch || parkingLoading"
-      class="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-xl hover:bg-indigo-700 disabled:opacity-40 transition-colors uppercase tracking-widest text-sm mb-8"
+      class="btn btn-navy w-full justify-center mb-10"
       @click="doSearch"
     >
-      {{ parkingLoading ? "Calcolo in corso…" : "Calcola" }}
+      {{ parkingLoading ? "Calcolo in corso…" : "Controlla disponibilità" }}
     </button>
 
-    <!-- Down arrow -->
-    <div v-if="searched" class="text-center text-indigo-600 text-2xl mb-6">
-      ▾
-    </div>
-
-    <!-- Results list grouped by spot type -->
+    <!-- Results -->
     <div v-if="searched">
       <div
         v-for="(group, idx) in groupedSpots"
         :key="group.type"
         class="flex items-center gap-4 py-5 cursor-pointer hover:bg-gray-50 transition-colors rounded-xl px-2"
-        :class="{ 'bg-indigo-50': selectedType === group.type }"
+        :class="{ 'bg-navy/5': selectedType === group.type }"
         @click="selectGroup(group)"
       >
-        <!-- Radio indicator -->
         <div
           class="w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center transition-all"
-          :class="
-            selectedType === group.type
-              ? 'border-indigo-600'
-              : 'border-gray-300'
-          "
+          :class="selectedType === group.type ? 'border-navy' : 'border-gray-300'"
         >
-          <div
-            v-if="selectedType === group.type"
-            class="w-2.5 h-2.5 rounded-full bg-indigo-600"
-          ></div>
+          <div v-if="selectedType === group.type" class="w-2.5 h-2.5 rounded-full bg-navy" />
         </div>
 
-        <!-- Icon + label -->
         <div class="flex items-center gap-4 flex-1 min-w-0">
-          <div
-            class="w-16 h-12 shrink-0 bg-gray-50 rounded-lg flex items-center justify-center text-3xl border border-gray-100"
-          >
+          <div class="w-16 h-12 shrink-0 bg-gray-50 rounded-lg flex items-center justify-center text-3xl border border-gray-100">
             {{ group.icon }}
           </div>
           <div class="min-w-0">
-            <div
-              class="font-bold text-gray-800 text-sm uppercase tracking-wide truncate"
-            >
-              {{ group.label }}
-            </div>
-            <div class="text-xs text-gray-400 mt-0.5">
-              {{ group.count }} posto/i disponibile/i
-            </div>
+            <div class="font-bold text-gray-800 text-sm uppercase tracking-wide truncate">{{ group.label }}</div>
+            <div class="text-xs text-gray-400 mt-0.5">{{ group.count }} posto/i disponibile/i</div>
           </div>
         </div>
 
-        <!-- Price badge -->
         <div
           class="shrink-0 flex items-center gap-1 px-4 py-2 rounded-xl font-bold text-sm text-white transition-colors"
-          :class="
-            selectedType === group.type ? 'bg-indigo-800' : 'bg-indigo-600'
-          "
+          :class="selectedType === group.type ? 'bg-navy-deep' : 'bg-navy'"
         >
-          <span
-            v-if="idx === 0"
-            class="line-through text-indigo-300 text-xs mr-1"
-          >
-            €{{
-              (parseFloat(group.price.replace(",", ".")) * 1.15)
-                .toFixed(2)
-                .replace(".", ",")
-            }}
+          <span v-if="idx === 0" class="line-through text-white/40 text-xs mr-1">
+            €{{ (parseFloat(group.price.replace(",", ".")) * 1.15).toFixed(2).replace(".", ",") }}
           </span>
           € {{ group.price }}
-          <span class="text-indigo-300 ml-0.5">›</span>
+          <span class="text-white/50 ml-0.5">›</span>
         </div>
       </div>
 
-      <div
-        v-if="groupedSpots.length === 0"
-        class="py-12 text-center text-gray-400"
-      >
+      <div v-if="groupedSpots.length === 0" class="py-12 text-center text-gray-400">
         Nessun posto disponibile per il periodo selezionato.
       </div>
     </div>
@@ -205,12 +117,7 @@ import type { ParkingSpot } from "~/stores/parking";
 definePageMeta({ middleware: "auth" });
 
 const parkingStore = useParkingStore();
-const {
-  fetchLocations,
-  fetchAvailability,
-  loading: parkingLoading,
-  error: parkingError,
-} = useParking();
+const { fetchLocations, fetchAvailability, loading: parkingLoading, error: parkingError } = useParking();
 const router = useRouter();
 const route = useRoute();
 
@@ -226,7 +133,6 @@ const query = reactive({
   vehicle_type: "standard",
 });
 
-// Pre-fill from landing page query params
 if (route.query.start_time) {
   const dt = route.query.start_time as string;
   query.start_date = dt.slice(0, 10);
@@ -240,9 +146,9 @@ if (route.query.end_time) {
 
 const vehicleTypes = [
   { value: "standard", icon: "🚗" },
-  { value: "disabled", icon: "🛵" },
-  { value: "ev", icon: "🚙" },
-  { value: "vip", icon: "🚐" },
+  { value: "disabled", icon: "♿" },
+  { value: "ev", icon: "⚡" },
+  { value: "vip", icon: "⭐" },
 ];
 
 const typeConfig: Record<string, { label: string; icon: string }> = {
@@ -255,13 +161,7 @@ const typeConfig: Record<string, { label: string; icon: string }> = {
 const PRICE_PER_HOUR = 5;
 
 const durationHours = computed(() => {
-  if (
-    !query.start_date ||
-    !query.start_time ||
-    !query.end_date ||
-    !query.end_time
-  )
-    return 0;
+  if (!query.start_date || !query.start_time || !query.end_date || !query.end_time) return 0;
   const start = new Date(`${query.start_date}T${query.start_time}`);
   const end = new Date(`${query.end_date}T${query.end_time}`);
   return Math.max(0, (end.getTime() - start.getTime()) / 3_600_000);
@@ -285,12 +185,7 @@ const groupedSpots = computed(() => {
 });
 
 const canSearch = computed(
-  () =>
-    query.location_id &&
-    query.start_date &&
-    query.start_time &&
-    query.end_date &&
-    query.end_time
+  () => query.location_id && query.start_date && query.start_time && query.end_date && query.end_time
 );
 
 async function doSearch() {
@@ -298,9 +193,7 @@ async function doSearch() {
   selectedType.value = "";
   await fetchAvailability({
     location_id: query.location_id,
-    start_time: new Date(
-      `${query.start_date}T${query.start_time}`
-    ).toISOString(),
+    start_time: new Date(`${query.start_date}T${query.start_time}`).toISOString(),
     end_time: new Date(`${query.end_date}T${query.end_time}`).toISOString(),
   });
   searched.value = true;

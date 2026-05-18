@@ -1,11 +1,11 @@
 <template>
   <NuxtLink
     :to="to"
-    class="flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors group"
+    class="flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors group border-l-2"
     :class="
       isActive
-        ? 'bg-white/10 text-white'
-        : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
+        ? 'bg-white/10 text-white border-brand-red'
+        : 'text-white/50 border-transparent hover:bg-white/5 hover:text-white/80'
     "
   >
     <span class="shrink-0 w-[18px] h-[18px] flex items-center justify-center">

@@ -11,6 +11,23 @@ export const useParking = () => {
 
   const loading = ref(false);
   const error = ref<string | null>(null);
+  const spots = ref<ParkingSpot[]>([]);
+
+  async function fetchSpots(locationId?: string) {
+    loading.value = true;
+    error.value = null;
+    try {
+      const params = locationId ? `?location=${locationId}` : "";
+      const data = await api<PaginatedResponse<ParkingSpot>>(`/parking/spots/${params}`);
+      spots.value = data.results;
+      return data.results;
+    } catch {
+      error.value = "Impossibile caricare i posti.";
+      return [];
+    } finally {
+      loading.value = false;
+    }
+  }
 
   async function fetchLocations() {
     loading.value = true;
@@ -86,8 +103,10 @@ export const useParking = () => {
   return {
     loading,
     error,
+    spots,
     fetchLocations,
     fetchAvailability,
+    fetchSpots,
     createLocation,
     updateLocation,
     deleteLocation,
