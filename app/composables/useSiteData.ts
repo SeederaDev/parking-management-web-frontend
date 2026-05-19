@@ -1,10 +1,8 @@
 export const sitePages = [
-  { path: "/", label: "Home" },
   { path: "/chi-siamo", label: "Chi Siamo" },
   { path: "/soccorso", label: "Soccorso Stradale" },
   { path: "/noleggio", label: "Noleggio" },
   { path: "/parcheggio", label: "Parcheggio" },
-  { path: "/vendita", label: "Vendita Auto" },
   { path: "/contatti", label: "Contatti", cta: true },
 ];
 

@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
 const mobileOpen = ref(false);
-const solidNav = ref(false);
-const isHome = computed(() => route.path === "/");
-let removeScrollListener: (() => void) | null = null;
 
 const closeMobile = () => {
   mobileOpen.value = false;
@@ -19,17 +16,6 @@ const openMobile = () => {
 };
 
 const isActive = (path: string) => route.path === path;
-
-onMounted(() => {
-  const onScroll = () => {
-    solidNav.value = window.scrollY > 40;
-  };
-  onScroll();
-  window.addEventListener("scroll", onScroll, { passive: true });
-  removeScrollListener = () => window.removeEventListener("scroll", onScroll);
-});
-
-onBeforeUnmount(() => removeScrollListener?.());
 
 watch(
   () => route.path,
@@ -45,7 +31,7 @@ async function handleLogout() {
 
 <template>
   <header>
-    <nav id="navbar" class="nav" :class="{ solid: solidNav || !isHome }">
+    <nav id="navbar" class="nav solid">
       <div class="nav-inner">
         <NuxtLink
           to="/"

@@ -83,8 +83,7 @@ useReveal();
   transition: all 0.4s var(--ease);
 }
 .nav.solid {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(20px) saturate(1.5);
+  background: #ffffff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 .nav-inner {
