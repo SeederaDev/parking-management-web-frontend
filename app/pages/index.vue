@@ -112,17 +112,12 @@
           </div>
           <div class="booking-vtypes">
             <label
-              v-for="vt in vehicleTypes"
+              v-for="vt in bookingVehicleTypes"
               :key="vt.value"
               class="booking-vt"
               :class="{ active: search.vehicle_type === vt.value }"
             >
-              <input
-                type="radio"
-                v-model="search.vehicle_type"
-                :value="vt.value"
-                class="sr-only"
-              />
+              <input type="radio" v-model="search.vehicle_type" :value="vt.value" class="sr-only" />
               <span class="booking-vt-icon">{{ vt.icon }}</span>
               <span class="booking-vt-label">{{ vt.label }}</span>
             </label>
@@ -130,14 +125,29 @@
           <div class="booking-footer">
             <button
               class="btn btn-navy"
-              style="width: 100%; justify-content: center"
-              :disabled="!search.location_id"
-              @click="doSearch"
+              style="width:100%;justify-content:center"
+              :disabled="!canSearch || searching"
+              @click="doSearch('home-risultati')"
             >
-              <svg width="16" height="16"><use href="#ic-parking" /></svg>
-              Controlla disponibilità
+              <svg v-if="!searching" width="16" height="16"><use href="#ic-parking" /></svg>
+              {{ searching ? "Ricerca in corso…" : "Controlla disponibilità" }}
             </button>
           </div>
+        </div>
+
+        <!-- Inline results -->
+        <div id="home-risultati" class="mt-48">
+          <template v-if="searched && groupedSpots.length">
+            <div class="sec-label">Disponibilità</div>
+            <div class="sec-title" style="margin-bottom:32px">Scegli il tuo posto.</div>
+          </template>
+          <BookingAvailabilityResults
+            :searched="searched"
+            :search-error="searchError"
+            :selected-type="selectedType"
+            :grouped-spots="groupedSpots"
+            @select="selectGroup"
+          />
         </div>
       </div>
     </section>
@@ -283,46 +293,22 @@ definePageMeta({ layout: "site" });
 useHead({ title: "Palmieri & Treglia - Dal 1966" });
 
 const authStore = useAuthStore();
-
 if (import.meta.client && authStore.isAuthenticated) {
-  navigateTo(authStore.isAdmin ? "/dashboard" : "/parking");
+  navigateTo(authStore.isAdmin ? "/dashboard" : "/parcheggio");
 }
 
 const marqueeLoop = [...marqueeItems, ...marqueeItems];
 
-const parkingStore = useParkingStore();
-const { fetchLocations } = useParking();
-const router = useRouter();
-
-const locations = computed(() => parkingStore.locations);
-
-const search = reactive({
-  location_id: "",
-  start_date: "",
-  start_time: "",
-  end_date: "",
-  end_time: "",
-  vehicle_type: "standard",
-});
-
-const vehicleTypes = [
-  { value: "standard", label: "Auto", icon: "🚗" },
-  { value: "disabled", label: "Accessibile", icon: "♿" },
-  { value: "ev", label: "Elettrico", icon: "⚡" },
-  { value: "vip", label: "VIP", icon: "⭐" },
-];
-
-function doSearch() {
-  if (!search.location_id) return;
-  const query: Record<string, string> = { location_id: search.location_id };
-  if (search.start_date && search.start_time)
-    query.start_time = `${search.start_date}T${search.start_time}`;
-  if (search.end_date && search.end_time)
-    query.end_time = `${search.end_date}T${search.end_time}`;
-  router.push({ path: "/parking", query });
-}
-
-onMounted(() => {
-  fetchLocations();
-});
+const {
+  locations,
+  search,
+  canSearch,
+  groupedSpots,
+  searching,
+  searchError,
+  searched,
+  selectedType,
+  doSearch,
+  selectGroup,
+} = useBookingSearch();
 </script>
