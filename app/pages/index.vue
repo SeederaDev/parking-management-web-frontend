@@ -66,7 +66,6 @@
     <!-- Booking widget -->
     <section style="background: var(--off-white)">
       <div class="container">
-        <div class="sec-label" data-reveal>ParkinGO Cruise</div>
         <div class="sec-title" data-reveal>Prenota il tuo posto.</div>
         <div class="sec-desc" data-reveal="delay-1">
           Parcheggio custodito con navetta gratuita per le Isole Pontine di
@@ -214,7 +213,6 @@
       <div class="container">
         <div class="parking-grid">
           <div data-reveal>
-            <div class="parking-logo-text">ParkinGO Cruise</div>
             <h2>Il tuo parcheggio per le Isole Pontine</h2>
             <p>
               Parcheggia in sicurezza e raggiungi il porto con la navetta
