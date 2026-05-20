@@ -140,14 +140,6 @@
           </svg>
         </button>
         <h1 class="text-sm font-semibold text-navy-deep font-sans">{{ pageTitle }}</h1>
-        <div class="ml-auto flex items-center gap-4 text-xs text-gray-400">
-          <NuxtLink to="/" class="hover:text-navy transition-colors flex items-center gap-1.5 font-medium">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-            </svg>
-            Torna al sito
-          </NuxtLink>
-        </div>
       </header>
 
       <!-- Page slot -->

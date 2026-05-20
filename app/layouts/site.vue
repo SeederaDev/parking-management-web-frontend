@@ -44,7 +44,7 @@ useReveal();
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
-.site-layout a {
+.site-layout a:not([class*="btn"]) {
   color: inherit;
 }
 .svg-sprite {

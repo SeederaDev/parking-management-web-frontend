@@ -6,7 +6,7 @@ useReveal();
   <div class="site-layout">
     <SiteSvgSprite />
     <SiteAppHeader />
-    <main>
+    <main style="padding-top:72px">
       <slot />
     </main>
     <SiteAppFooter />

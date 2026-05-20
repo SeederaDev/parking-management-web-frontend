@@ -109,7 +109,7 @@ const {
               <button
                 class="btn btn-navy"
                 style="width:100%;justify-content:center"
-                :disabled="!canSearch || searching"
+                :disabled="!search.location_id || searching"
                 @click="doSearch('risultati')"
               >
                 <svg v-if="!searching" width="16" height="16"><use href="#ic-parking" /></svg>

@@ -21,7 +21,6 @@ export const spotTypeLabels: Record<string, string> = {
 
 export const useBookingSearch = () => {
   const parkingStore = useParkingStore();
-  const authStore    = useAuthStore();
   const router       = useRouter();
   const {
     fetchLocations,
@@ -73,11 +72,22 @@ export const useBookingSearch = () => {
   });
 
   async function doSearch(scrollTargetId?: string) {
-    if (!canSearch.value) return;
-    if (!authStore.isAuthenticated) {
-      router.push("/login");
-      return;
+    if (!search.location_id) return;
+
+    // Auto-fill dates when not provided (next 24 h)
+    if (!search.start_date || !search.start_time) {
+      const d = new Date();
+      d.setDate(d.getDate() + 1);
+      search.start_date = d.toISOString().slice(0, 10);
+      search.start_time = "08:00";
     }
+    if (!search.end_date || !search.end_time) {
+      const d = new Date();
+      d.setDate(d.getDate() + 2);
+      search.end_date = d.toISOString().slice(0, 10);
+      search.end_time = "20:00";
+    }
+
     searched.value = false;
     selectedType.value = "";
     parkingStore.setAvailableSpots([]);
