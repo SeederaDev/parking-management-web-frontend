@@ -63,22 +63,6 @@
         <span class="font-bold text-sm"><span class="text-blue-700">Pay</span><span class="text-blue-400">Pal</span></span>
       </label>
 
-      <!-- Satispay (disabled) -->
-      <label class="flex items-center justify-between bg-white border-2 rounded-2xl px-5 py-4 opacity-50 cursor-not-allowed" style="border-color:var(--gray-100)">
-        <div class="flex items-center gap-3">
-          <div class="w-5 h-5 rounded-full border-2 shrink-0" style="border-color:var(--gray-200)" />
-          <span class="text-sm font-medium" style="color:var(--gray-700)">Paga con Satispay</span>
-        </div>
-        <span class="text-red-600 font-bold text-sm">satispay</span>
-      </label>
-
-      <!-- Bonifico (disabled) -->
-      <label class="flex items-center justify-between bg-white border-2 rounded-2xl px-5 py-4 opacity-50 cursor-not-allowed" style="border-color:var(--gray-100)">
-        <div class="flex items-center gap-3">
-          <div class="w-5 h-5 rounded-full border-2 shrink-0" style="border-color:var(--gray-200)" />
-          <span class="text-sm font-medium" style="color:var(--gray-700)">Paga con Bonifico</span>
-        </div>
-      </label>
     </div>
 
     <p v-if="checkoutError" class="text-red-600 text-sm bg-red-50 p-3 rounded-lg mb-4">{{ checkoutError }}</p>

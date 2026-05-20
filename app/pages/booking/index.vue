@@ -73,7 +73,7 @@
                   <div class="bform-sum-header">Data Uscita</div>
                   <div class="bform-sum-val">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                    {{ fmtDate(endTime) }}
+                    {{ fmtDate(endTime.slice(0,10) + 'T00:00:00') }}
                   </div>
                 </div>
                 <div class="bform-sum-col">
@@ -212,9 +212,19 @@ const estimatedPrice = computed(() => {
   return (days * PRICE_PER_DAY).toFixed(2).replace('.', ',');
 });
 
+// Treat "2026-05-20T00:00:00" as UTC midnight, never local time
+function toUtcMidnight(s: string): string {
+  const base = s.replace(/Z$/, '').slice(0, 10); // "2026-05-20"
+  return `${base}T00:00:00Z`;
+}
+
 function fmtDate(dt: string) {
   if (!dt) return '';
-  return new Date(dt).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  // Parse as UTC so the displayed date matches the booked date regardless of locale
+  const [y, m, d] = (dt.slice(0, 10)).split('-').map(Number);
+  return new Date(Date.UTC(y, m - 1, d)).toLocaleDateString('it-IT', {
+    day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC',
+  });
 }
 
 // ── Actions ───────────────────────────────────────────────────────
@@ -226,8 +236,8 @@ async function confirmBooking() {
   const booking = await createBooking({
     spot:       spotId.value,
     vehicle:    null,
-    start_time: new Date(startTime.value).toISOString(),
-    end_time:   new Date(endTime.value).toISOString(),
+    start_time: toUtcMidnight(startTime.value),
+    end_time:   toUtcMidnight(endTime.value),
     notes:      form.messaggio || undefined,
   });
   if (!booking) return;
@@ -259,7 +269,7 @@ onMounted(() => {
 <style scoped>
 /* ── Stepper ───────────────────────────────────────────────────── */
 .bk-stepper { border-bottom:1px solid #eee; background:#fff; padding:18px 0; }
-.bk-stepper-inner { display:flex; align-items:center; max-width:400px; }
+.bk-stepper-inner { display:flex; align-items:center; max-width:400px; margin:0 auto; }
 .bk-step { display:flex; flex-direction:column; align-items:center; gap:5px; text-decoration:none; cursor:default; }
 .bk-step__num { width:30px; height:30px; border-radius:50%; border:2px solid #e0e0e0; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#ccc; background:#fff; }
 .bk-step__label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:#ccc; }
