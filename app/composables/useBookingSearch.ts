@@ -20,8 +20,9 @@ export const spotTypeLabels: Record<string, string> = {
 };
 
 export const useBookingSearch = () => {
-  const parkingStore = useParkingStore();
-  const router       = useRouter();
+  const parkingStore      = useParkingStore();
+  const bookingSearchStore = useBookingSearchStore();
+  const router            = useRouter();
   const {
     fetchLocations,
     fetchAvailability,
@@ -33,19 +34,31 @@ export const useBookingSearch = () => {
   const searched     = ref(false);
   const selectedType = ref("");
 
+  // Initialise from Pinia so state survives navigation / login redirect
   const search = reactive({
-    location_id:  "",
-    start_date:   "",
-    end_date:     "",
-    vehicle_type: "standard",
+    location_id:  bookingSearchStore.locationId  || "",
+    start_date:   bookingSearchStore.startDate   || "",
+    end_date:     bookingSearchStore.endDate     || "",
+    vehicle_type: bookingSearchStore.vehicleType || "standard",
   });
 
+  // Auto-select first location when locations load (if none already set)
   watch(locations, (locs) => {
     const first = locs[0];
     if (first && !search.location_id) {
       search.location_id = String(first.id);
     }
   }, { immediate: true });
+
+  // Keep Pinia in sync whenever search changes
+  watch(search, (val) => {
+    bookingSearchStore.save({
+      start_date:   val.start_date,
+      end_date:     val.end_date,
+      vehicle_type: val.vehicle_type,
+      location_id:  val.location_id,
+    });
+  }, { deep: true });
 
   const canSearch = computed(() =>
     !!(search.location_id && search.start_date && search.end_date)

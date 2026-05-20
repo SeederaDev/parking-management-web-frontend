@@ -171,11 +171,16 @@ function formatDate(dt: string) {
 }
 
 async function confirmBooking() {
+  if (!authStore.isAuthenticated) {
+    navigateTo(`/login?redirect=${encodeURIComponent(useRoute().fullPath)}`);
+    return;
+  }
   const booking = await createBooking({
     spot:       props.spotId,
     vehicle:    null,
     start_time: new Date(props.startTime).toISOString(),
     end_time:   new Date(props.endTime).toISOString(),
+    notes:      form.messaggio || undefined,
   });
   if (!booking) return;
   emit('confirmed');

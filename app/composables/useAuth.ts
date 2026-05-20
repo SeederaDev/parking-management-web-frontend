@@ -4,6 +4,7 @@ export const useAuth = () => {
   const api = useApi();
   const authStore = useAuthStore();
   const router = useRouter();
+  const route = useRoute(); // must be at setup level — loses context after await
 
   const loading = ref(false);
   const error = ref<string | null>(null);
@@ -11,13 +12,14 @@ export const useAuth = () => {
   async function login(payload: LoginPayload) {
     loading.value = true;
     error.value = null;
+    const redirect = route.query.redirect as string | undefined;
     try {
       const data = await api<AuthResponse>("/auth/login/", {
         method: "POST",
         body: payload,
       });
       authStore.setSession(data);
-      await router.push(authStore.isAdmin ? "/dashboard" : "/parcheggio");
+      await navigateTo(redirect || (authStore.isAdmin ? "/dashboard" : "/parcheggio"));
     } catch (err: unknown) {
       error.value = extractError(err, "Credenziali non valide.");
     } finally {
