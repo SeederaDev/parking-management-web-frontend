@@ -17,7 +17,6 @@
             v-model="form.userEmail"
             type="email"
             required
-            placeholder="cliente@email.com"
             class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy"
           />
           <p v-if="resolvedUser" class="mt-1.5 text-xs font-semibold text-emerald-600">
@@ -45,7 +44,6 @@
               v-model="form.spot"
               type="text"
               required
-              placeholder="es. A1"
               class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy"
             />
           </div>
@@ -94,7 +92,6 @@
           <textarea
             v-model="form.notes"
             rows="3"
-            placeholder="Note opzionali…"
             class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy resize-none"
           />
         </div>

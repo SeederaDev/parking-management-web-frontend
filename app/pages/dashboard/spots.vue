@@ -28,7 +28,6 @@
             v-model="form.identifier"
             type="text"
             required
-            placeholder="A1"
             class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy"
           />
         </div>
@@ -71,7 +70,6 @@
           <input
             v-model="form.floor"
             type="text"
-            placeholder="P1, T, -1…"
             class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy"
           />
         </div>
@@ -82,7 +80,6 @@
           <input
             v-model="form.notes"
             type="text"
-            placeholder="Colonnina ricarica, ingombro extra…"
             class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy"
           />
         </div>

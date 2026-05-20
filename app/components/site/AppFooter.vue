@@ -55,7 +55,12 @@
         >© 2026 Palmieri &amp; Treglia s.r.l. - P.IVA 01361320599 - Certificata
         ISO 9001</span
       >
-      <span>Tutti i diritti riservati</span>
+      <span>
+        <NuxtLink to="/privacy">Privacy Policy</NuxtLink>
+        &nbsp;·&nbsp;
+        <NuxtLink to="/cookie-policy">Cookie Policy</NuxtLink>
+        &nbsp;·&nbsp; Tutti i diritti riservati
+      </span>
     </div>
   </footer>
 </template>

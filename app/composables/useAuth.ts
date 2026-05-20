@@ -17,15 +17,15 @@ export const useAuth = () => {
         body: payload,
       });
       authStore.setSession(data);
-      await router.push(authStore.isAdmin ? "/dashboard" : "/parking");
+      await router.push(authStore.isAdmin ? "/dashboard" : "/parcheggio");
     } catch (err: unknown) {
-      error.value = extractError(err, "Invalid credentials.");
+      error.value = extractError(err, "Credenziali non valide.");
     } finally {
       loading.value = false;
     }
   }
 
-  async function register(payload: RegisterPayload) {
+  async function register(payload: RegisterPayload & { recaptcha_token?: string }) {
     loading.value = true;
     error.value = null;
     try {
@@ -34,9 +34,9 @@ export const useAuth = () => {
         body: payload,
       });
       authStore.setSession(data);
-      await router.push("/parking");
+      await router.push("/parcheggio");
     } catch (err: unknown) {
-      error.value = extractError(err, "Registration failed.");
+      error.value = extractError(err, "Registrazione non riuscita.");
     } finally {
       loading.value = false;
     }
@@ -54,12 +54,48 @@ export const useAuth = () => {
     }
   }
 
-  return { login, register, logout, loading, error };
+  async function requestPasswordReset(email: string): Promise<string | null> {
+    loading.value = true;
+    error.value = null;
+    try {
+      const data = await api<{ detail: string }>("/auth/password-reset/", {
+        method: "POST",
+        body: { email },
+      });
+      return data.detail;
+    } catch (err: unknown) {
+      error.value = extractError(err, "Errore nell'invio della email.");
+      return null;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  async function confirmPasswordReset(uid: string, token: string, password: string): Promise<boolean> {
+    loading.value = true;
+    error.value = null;
+    try {
+      await api("/auth/password-reset/confirm/", {
+        method: "POST",
+        body: { uid, token, password },
+      });
+      return true;
+    } catch (err: unknown) {
+      error.value = extractError(err, "Link scaduto o non valido.");
+      return false;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  return { login, register, logout, requestPasswordReset, confirmPasswordReset, loading, error };
 };
 
 function extractError(err: unknown, fallback: string): string {
   if (err && typeof err === "object" && "data" in err) {
     const data = (err as { data: Record<string, unknown> }).data;
+    if (typeof data.error === "string") return data.error;
+    if (typeof data.detail === "string") return data.detail;
     const first = Object.values(data)[0];
     if (Array.isArray(first)) return first[0] as string;
     if (typeof first === "string") return first;

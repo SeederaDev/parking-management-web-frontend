@@ -45,13 +45,12 @@ useHead({ title: "Noleggio Auto - Palmieri & Treglia" });
           </p>
           <div class="contact-form max-640">
             <div class="form-row">
-              <input type="text" placeholder="Nome e Cognome" /><input
+              <input type="text" /><input
                 type="email"
-                placeholder="Email"
               />
             </div>
             <div class="form-row">
-              <input type="tel" placeholder="Telefono" /><select>
+              <input type="tel" /><select>
                 <option value="">Tipo veicolo</option>
                 <option>City Car</option>
                 <option>Berlina</option>
@@ -65,7 +64,7 @@ useHead({ title: "Noleggio Auto - Palmieri & Treglia" });
                 aria-label="Data riconsegna"
               />
             </div>
-            <textarea placeholder="Note aggiuntive..."></textarea>
+            <textarea></textarea>
             <button class="btn btn-red" type="button">Invia Richiesta</button>
           </div>
         </div>

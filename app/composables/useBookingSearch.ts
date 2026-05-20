@@ -1,7 +1,7 @@
 import type { ParkingSpot } from "~/types";
 import { nextTick } from "vue";
 
-const PRICE_PER_HOUR = 5;
+const PRICE_PER_DAY = 15;
 
 export const bookingVehicleTypes = [
   { value: "standard", label: "Auto",        icon: "🚗" },
@@ -36,23 +36,26 @@ export const useBookingSearch = () => {
   const search = reactive({
     location_id:  "",
     start_date:   "",
-    start_time:   "",
     end_date:     "",
-    end_time:     "",
     vehicle_type: "standard",
   });
 
+  watch(locations, (locs) => {
+    const first = locs[0];
+    if (first && !search.location_id) {
+      search.location_id = String(first.id);
+    }
+  }, { immediate: true });
+
   const canSearch = computed(() =>
-    !!(search.location_id &&
-       search.start_date && search.start_time &&
-       search.end_date   && search.end_time)
+    !!(search.location_id && search.start_date && search.end_date)
   );
 
-  const durationHours = computed(() => {
-    if (!canSearch.value) return 0;
-    const start = new Date(`${search.start_date}T${search.start_time}`);
-    const end   = new Date(`${search.end_date}T${search.end_time}`);
-    return Math.max(0, (end.getTime() - start.getTime()) / 3_600_000);
+  const durationDays = computed(() => {
+    if (!search.start_date || !search.end_date) return 0;
+    const start = new Date(search.start_date);
+    const end   = new Date(search.end_date);
+    return Math.max(0, Math.round((end.getTime() - start.getTime()) / 86_400_000));
   });
 
   const groupedSpots = computed(() => {
@@ -61,12 +64,12 @@ export const useBookingSearch = () => {
       if (!map.has(s.spot_type)) map.set(s.spot_type, []);
       map.get(s.spot_type)!.push(s);
     }
-    const h = durationHours.value;
+    const d = durationDays.value;
     return [...map.entries()].map(([type, spots]) => ({
       type,
       label: spotTypeLabels[type] ?? type,
       count: spots.length,
-      price: (h * PRICE_PER_HOUR).toFixed(2).replace(".", ","),
+      price: (d * PRICE_PER_DAY).toFixed(2).replace(".", ","),
       spots,
     }));
   });
@@ -74,18 +77,15 @@ export const useBookingSearch = () => {
   async function doSearch(scrollTargetId?: string) {
     if (!search.location_id) return;
 
-    // Auto-fill dates when not provided (next 24 h)
-    if (!search.start_date || !search.start_time) {
+    if (!search.start_date) {
       const d = new Date();
       d.setDate(d.getDate() + 1);
       search.start_date = d.toISOString().slice(0, 10);
-      search.start_time = "08:00";
     }
-    if (!search.end_date || !search.end_time) {
+    if (!search.end_date) {
       const d = new Date();
       d.setDate(d.getDate() + 2);
       search.end_date = d.toISOString().slice(0, 10);
-      search.end_time = "20:00";
     }
 
     searched.value = false;
@@ -94,8 +94,8 @@ export const useBookingSearch = () => {
 
     await fetchAvailability({
       location_id: search.location_id,
-      start_time:  new Date(`${search.start_date}T${search.start_time}`).toISOString(),
-      end_time:    new Date(`${search.end_date}T${search.end_time}`).toISOString(),
+      start_time:  `${search.start_date}T00:00:00`,
+      end_time:    `${search.end_date}T00:00:00`,
     });
 
     searched.value = true;
@@ -116,8 +116,8 @@ export const useBookingSearch = () => {
         spot_identifier: spot.identifier,
         spot_type:       group.type,
         location_id:     search.location_id,
-        start_time:      `${search.start_date}T${search.start_time}`,
-        end_time:        `${search.end_date}T${search.end_time}`,
+        start_time:      `${search.start_date}T00:00:00`,
+        end_time:        `${search.end_date}T00:00:00`,
       },
     });
   }

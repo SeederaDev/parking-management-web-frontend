@@ -29,7 +29,6 @@
             v-model="form.reason"
             type="text"
             required
-            placeholder="es. Natale, manutenzione straordinaria…"
             class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy"
           />
         </div>

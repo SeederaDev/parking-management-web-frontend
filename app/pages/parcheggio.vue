@@ -6,7 +6,6 @@ const iconClassFor = (index: string | number) =>
   Number(index) % 3 === 0 ? "ic-gold" : Number(index) % 3 === 1 ? "ic-red" : "ic-blue";
 
 const {
-  locations,
   search,
   canSearch,
   groupedSpots,
@@ -74,23 +73,14 @@ const {
           <div class="sec-desc">Scegli le date del tuo soggiorno e seleziona il tipo di veicolo.</div>
 
           <div class="booking-widget mt-32">
-            <div class="booking-loc">
-              <svg width="18" height="18"><use href="#ic-pin" /></svg>
-              <select v-model="search.location_id">
-                <option value="">Seleziona parcheggio…</option>
-                <option v-for="loc in locations" :key="loc.id" :value="loc.id">{{ loc.name }}</option>
-              </select>
-            </div>
             <div class="booking-dates">
               <div class="booking-date-col">
                 <div class="booking-date-label">Ingresso</div>
                 <input v-model="search.start_date" type="date" aria-label="Data ingresso" />
-                <input v-model="search.start_time" type="time" aria-label="Ora ingresso" />
               </div>
               <div class="booking-date-col">
                 <div class="booking-date-label">Uscita</div>
                 <input v-model="search.end_date" type="date" aria-label="Data uscita" />
-                <input v-model="search.end_time" type="time" aria-label="Ora uscita" />
               </div>
             </div>
             <div class="booking-vtypes">

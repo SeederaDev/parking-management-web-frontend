@@ -50,7 +50,6 @@
           required
           autocomplete="email"
           class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1B2A6B]/10 focus:border-[#1B2A6B] transition-colors"
-          placeholder="tu@esempio.com"
         />
       </div>
 
@@ -66,7 +65,6 @@
           minlength="8"
           autocomplete="new-password"
           class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1B2A6B]/10 focus:border-[#1B2A6B] transition-colors"
-          placeholder="Minimo 8 caratteri"
         />
       </div>
 
@@ -80,7 +78,6 @@
           type="text"
           required
           class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1B2A6B]/10 focus:border-[#1B2A6B] transition-colors"
-          placeholder="es. acme-parking"
         />
         <p class="text-xs text-gray-400 mt-1.5">
           Lo slug del tuo operatore di parcheggio.
@@ -140,7 +137,16 @@
       </button>
     </form>
 
-    <p class="mt-6 text-xs text-gray-400 text-center">
+    <p class="mt-4 text-xs text-gray-400 text-center">
+      Creando un account accetti la nostra
+      <NuxtLink
+        to="/privacy"
+        class="text-[#1B2A6B] underline"
+        >Privacy Policy</NuxtLink
+      >.
+    </p>
+
+    <p class="mt-3 text-xs text-gray-400 text-center">
       Hai già un account?
       <NuxtLink
         to="/login"
@@ -154,6 +160,15 @@
 <script setup lang="ts">
 definePageMeta({ layout: "auth" });
 
+const config = useRuntimeConfig();
+const siteKey = config.public.recaptchaSiteKey as string;
+
+if (siteKey) {
+  useHead({
+    script: [{ src: `https://www.google.com/recaptcha/api.js?render=${siteKey}`, defer: true }],
+  });
+}
+
 const { register, loading, error } = useAuth();
 
 const form = reactive({
@@ -165,6 +180,12 @@ const form = reactive({
 });
 
 async function handleRegister() {
-  await register({ ...form });
+  let recaptcha_token = "";
+  if (siteKey && typeof window !== "undefined" && (window as any).grecaptcha) {
+    try {
+      recaptcha_token = await (window as any).grecaptcha.execute(siteKey, { action: "register" });
+    } catch { /* skip if reCAPTCHA not ready */ }
+  }
+  await register({ ...form, recaptcha_token });
 }
 </script>

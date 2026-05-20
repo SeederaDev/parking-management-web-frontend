@@ -22,7 +22,7 @@
       <div v-else-if="bookingStore.bookings.length === 0" class="text-center py-16 text-gray-400">
         <div class="text-5xl mb-4">🅿</div>
         <p class="mb-6">Nessuna prenotazione ancora.</p>
-        <NuxtLink to="/parking" class="btn btn-navy">Prenota un posto</NuxtLink>
+        <NuxtLink to="/parcheggio" class="btn btn-navy">Prenota un posto</NuxtLink>
       </div>
 
       <div v-else class="space-y-3">
@@ -89,8 +89,8 @@ function onBookingConfirmed() {
 }
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleString("it-IT", {
-    day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit",
+  return new Date(iso).toLocaleDateString("it-IT", {
+    day: "2-digit", month: "short", year: "numeric",
   });
 }
 

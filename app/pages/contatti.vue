@@ -86,13 +86,12 @@ useHead({ title: "Contatti - Palmieri & Treglia" });
             </p>
             <div class="contact-form" data-reveal="delay-1">
               <div class="form-row">
-                <input type="text" placeholder="Nome" /><input
+                <input type="text" /><input
                   type="text"
-                  placeholder="Cognome"
                 />
               </div>
-              <input type="email" placeholder="Email" />
-              <input type="tel" placeholder="Telefono" />
+              <input type="email" />
+              <input type="tel" />
               <select>
                 <option value="">Servizio di interesse</option>
                 <option>Soccorso Stradale</option>
@@ -102,7 +101,7 @@ useHead({ title: "Contatti - Palmieri & Treglia" });
                 <option>Car Valet</option>
                 <option>Altro</option>
               </select>
-              <textarea placeholder="Il tuo messaggio..."></textarea>
+              <textarea></textarea>
               <button class="btn btn-red" type="button">Invia Messaggio</button>
             </div>
           </div>

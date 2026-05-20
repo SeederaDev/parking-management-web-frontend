@@ -73,15 +73,6 @@
           Ponza e Ventotene.
         </div>
         <div class="booking-widget" data-reveal="delay-2">
-          <div class="booking-loc">
-            <svg width="18" height="18"><use href="#ic-pin" /></svg>
-            <select v-model="search.location_id">
-              <option value="">Seleziona parcheggio…</option>
-              <option v-for="loc in locations" :key="loc.id" :value="loc.id">
-                {{ loc.name }}
-              </option>
-            </select>
-          </div>
           <div class="booking-dates">
             <div class="booking-date-col">
               <div class="booking-date-label">Ingresso</div>
@@ -90,11 +81,6 @@
                 type="date"
                 aria-label="Data ingresso"
               />
-              <input
-                v-model="search.start_time"
-                type="time"
-                aria-label="Ora ingresso"
-              />
             </div>
             <div class="booking-date-col">
               <div class="booking-date-label">Uscita</div>
@@ -102,11 +88,6 @@
                 v-model="search.end_date"
                 type="date"
                 aria-label="Data uscita"
-              />
-              <input
-                v-model="search.end_time"
-                type="time"
-                aria-label="Ora uscita"
               />
             </div>
           </div>
@@ -300,7 +281,6 @@ if (import.meta.client && authStore.isAuthenticated) {
 const marqueeLoop = [...marqueeItems, ...marqueeItems];
 
 const {
-  locations,
   search,
   canSearch,
   groupedSpots,

@@ -11,6 +11,7 @@ export default defineNuxtConfig({
       apiBase: process.env.NUXT_PUBLIC_API_BASE ?? "http://localhost:8000/api",
       stripePublishableKey: process.env.NUXT_PUBLIC_STRIPE_KEY ?? "",
       paypalClientId: process.env.NUXT_PUBLIC_PAYPAL_CLIENT_ID ?? "",
+      recaptchaSiteKey: process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY ?? "",
     },
   },
 
