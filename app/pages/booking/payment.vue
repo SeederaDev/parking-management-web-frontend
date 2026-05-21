@@ -63,6 +63,27 @@
         <span class="font-bold text-sm"><span class="text-blue-700">Pay</span><span class="text-blue-400">Pal</span></span>
       </label>
 
+      <!-- Pay at location (only if tenant allows it) -->
+      <label
+        v-if="allowOffline"
+        class="flex items-center justify-between bg-white border-2 rounded-2xl px-5 py-4 cursor-pointer transition-all"
+        :style="selectedMethod === 'offline' ? 'border-color:var(--navy)' : 'border-color:var(--gray-100)'"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all"
+            :style="selectedMethod === 'offline' ? 'border-color:var(--navy)' : 'border-color:var(--gray-200)'"
+          >
+            <div v-if="selectedMethod === 'offline'" class="w-2.5 h-2.5 rounded-full" style="background:var(--navy)" />
+          </div>
+          <input type="radio" v-model="selectedMethod" value="offline" class="sr-only" />
+          <div>
+            <span class="text-sm font-medium" style="color:var(--gray-700)">Paga in loco</span>
+            <div class="text-xs mt-0.5" style="color:var(--gray-400)">Carta di credito richiesta come garanzia all'arrivo</div>
+          </div>
+        </div>
+        <span class="text-2xl">🏢</span>
+      </label>
     </div>
 
     <p v-if="checkoutError" class="text-red-600 text-sm bg-red-50 p-3 rounded-lg mb-4">{{ checkoutError }}</p>
@@ -86,11 +107,21 @@ definePageMeta({ middleware: 'auth' });
 const route = useRoute();
 const authStore = useAuthStore();
 const { initiateCheckout, initiatePayPalPayment } = useBookings();
+const api = useApi();
 
-const bookingId = route.query.booking_id as string;
+const bookingId      = route.query.booking_id as string;
 const selectedMethod = ref('stripe');
 const checkoutLoading = ref(false);
-const checkoutError = ref<string | null>(null);
+const checkoutError  = ref<string | null>(null);
+const allowOffline   = ref(false);
+
+onMounted(async () => {
+  if (!bookingId) return navigateTo('/booking');
+  try {
+    const s = await api<{ payment_mode: string }>('/tenants/settings/');
+    allowOffline.value = s.payment_mode === 'online_or_offline';
+  } catch { /* keep false */ }
+});
 
 async function confirmAndPay() {
   if (!bookingId) return;
@@ -105,13 +136,14 @@ async function confirmAndPay() {
       const approveUrl = await initiatePayPalPayment(bookingId);
       if (approveUrl) navigateTo(approveUrl, { external: true });
       else checkoutError.value = 'Errore nell\'avvio del pagamento PayPal. Riprova.';
+    } else if (selectedMethod.value === 'offline') {
+      await api(`/bookings/${bookingId}/confirm-offline/`, { method: 'POST' });
+      navigateTo('/booking?confirmed=1');
     }
   } catch {
-    checkoutError.value = 'Errore nell\'avvio del pagamento. Riprova.';
+    checkoutError.value = 'Errore. Riprova.';
   } finally {
     checkoutLoading.value = false;
   }
 }
-
-onMounted(() => { if (!bookingId) navigateTo('/booking'); });
 </script>

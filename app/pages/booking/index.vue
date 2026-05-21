@@ -85,11 +85,16 @@
 
             <!-- Info rows -->
             <div class="bform-info-row">
+              <div class="bform-info-label">Politica di Cancellazione</div>
+              <p class="bform-info-text">Cancellazione gratuita fino a <strong>24 ore prima</strong> dell'ingresso. Oltre tale termine la prenotazione non è rimborsabile.</p>
+            </div>
+
+            <div class="bform-info-row">
               <div class="bform-info-label">Orario di Apertura</div>
               <p class="bform-info-text">Dal Lunedì al Sabato dalle 06:00 all'1:00. Domenica e festivi dalle 06:00 alle 10:00 e dalle 18:00 all'1:00.</p>
               <label class="bform-check">
                 <input v-model="form.orario_preso_nota" type="checkbox" />
-                <span>Ho preso nota dell'orario ridotto del parcheggio.</span>
+                <span>Ho preso nota dell'orario di apertura del parcheggio.</span>
               </label>
             </div>
             <div class="bform-info-row">
