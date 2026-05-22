@@ -1,8 +1,6 @@
 import type { ParkingSpot } from "~/types";
 import { nextTick } from "vue";
 
-const PRICE_PER_DAY = 15;
-
 export const bookingVehicleTypes = [
   { value: "standard", label: "Auto",        icon: "🚗" },
   { value: "disabled", label: "Accessibile", icon: "♿" },
@@ -19,10 +17,18 @@ export const spotTypeLabels: Record<string, string> = {
   camper:   "Posto Camper",
 };
 
+interface PublicPricing {
+  daily_rate: string;
+  cancellation_cutoff_hours: number;
+  enable_hourly_booking: boolean;
+  payment_mode: string;
+}
+
 export const useBookingSearch = () => {
-  const parkingStore      = useParkingStore();
+  const parkingStore       = useParkingStore();
   const bookingSearchStore = useBookingSearchStore();
-  const router            = useRouter();
+  const router             = useRouter();
+  const api                = useApi();
   const {
     fetchLocations,
     fetchAvailability,
@@ -33,8 +39,16 @@ export const useBookingSearch = () => {
   const locations    = computed(() => parkingStore.locations);
   const searched     = ref(false);
   const selectedType = ref("");
+  const pricing      = ref<PublicPricing | null>(null);
 
-  // Initialise from Pinia so state survives navigation / login redirect
+  const dailyRate = computed(() =>
+    pricing.value ? parseFloat(pricing.value.daily_rate) : 15
+  );
+
+  const cancellationCutoffHours = computed(() =>
+    pricing.value?.cancellation_cutoff_hours ?? 24
+  );
+
   const search = reactive({
     location_id:  bookingSearchStore.locationId  || "",
     start_date:   bookingSearchStore.startDate   || "",
@@ -42,7 +56,6 @@ export const useBookingSearch = () => {
     vehicle_type: bookingSearchStore.vehicleType || "standard",
   });
 
-  // Auto-select first location when locations load (if none already set)
   watch(locations, (locs) => {
     const first = locs[0];
     if (first && !search.location_id) {
@@ -50,7 +63,6 @@ export const useBookingSearch = () => {
     }
   }, { immediate: true });
 
-  // Keep Pinia in sync whenever search changes
   watch(search, (val) => {
     bookingSearchStore.save({
       start_date:   val.start_date,
@@ -78,11 +90,12 @@ export const useBookingSearch = () => {
       map.get(s.spot_type)!.push(s);
     }
     const d = durationDays.value;
+    const rate = dailyRate.value;
     return [...map.entries()].map(([type, spots]) => ({
       type,
       label: spotTypeLabels[type] ?? type,
       count: spots.length,
-      price: (d * PRICE_PER_DAY).toFixed(2).replace(".", ","),
+      price: (d * rate).toFixed(2).replace(".", ","),
       spots,
     }));
   });
@@ -135,7 +148,12 @@ export const useBookingSearch = () => {
     });
   }
 
-  onMounted(() => fetchLocations());
+  onMounted(async () => {
+    fetchLocations();
+    try {
+      pricing.value = await api<PublicPricing>("/tenants/pricing/");
+    } catch { /* use defaults */ }
+  });
 
   return {
     locations,
@@ -146,6 +164,8 @@ export const useBookingSearch = () => {
     searchError,
     searched,
     selectedType,
+    dailyRate,
+    cancellationCutoffHours,
     doSearch,
     selectGroup,
   };

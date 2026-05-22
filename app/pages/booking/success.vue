@@ -143,6 +143,13 @@ function fmtDate(iso: string) {
 }
 
 onMounted(async () => {
+  // Offline guarantee path — no session_id, booking already confirmed
+  if (route.query.offline === '1') {
+    paid.value      = true;
+    verifying.value = false;
+    return;
+  }
+
   if (!sessionId) {
     verifying.value = false;
     pageError.value = 'Nessun ID sessione trovato.';

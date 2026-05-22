@@ -86,7 +86,7 @@
             <!-- Info rows -->
             <div class="bform-info-row">
               <div class="bform-info-label">Politica di Cancellazione</div>
-              <p class="bform-info-text">Cancellazione gratuita fino a <strong>24 ore prima</strong> dell'ingresso. Oltre tale termine la prenotazione non è rimborsabile.</p>
+              <p class="bform-info-text">Cancellazione gratuita fino a <strong>{{ cutoffHours }} ore prima</strong> dell'ingresso. Oltre tale termine la prenotazione non è rimborsabile.</p>
             </div>
 
             <div class="bform-info-row">
@@ -208,13 +208,25 @@ const spotTypeLabels: Record<string, string> = {
 };
 const spotLabel = computed(() => spotTypeLabels[spotType.value] ?? spotIdentifier.value);
 
-const PRICE_PER_DAY = 15;
+const pricePerDay = ref(15);
+const cutoffHours = ref(24);
+
+onMounted(async () => {
+  fetchLocations();
+  if (!spotId.value && authStore.isAuthenticated) fetchBookings();
+  try {
+    const p = await api<{ daily_rate: string; cancellation_cutoff_hours: number }>('/tenants/pricing/');
+    pricePerDay.value = parseFloat(p.daily_rate);
+    cutoffHours.value = p.cancellation_cutoff_hours;
+  } catch { /* keep defaults */ }
+});
+
 const estimatedPrice = computed(() => {
   if (!startTime.value || !endTime.value) return '0,00';
   const days = Math.max(0, Math.round(
     (new Date(endTime.value).getTime() - new Date(startTime.value).getTime()) / 86_400_000
   ));
-  return (days * PRICE_PER_DAY).toFixed(2).replace('.', ',');
+  return (days * pricePerDay.value).toFixed(2).replace('.', ',');
 });
 
 // Treat "2026-05-20T00:00:00" as UTC midnight, never local time
@@ -265,10 +277,6 @@ function statusLabel(s: string) {
   return { pending: 'In attesa', paid: 'Pagata', cancelled: 'Annullata' }[s] ?? s;
 }
 
-onMounted(() => {
-  fetchLocations();
-  if (!spotId.value && authStore.isAuthenticated) fetchBookings();
-});
 </script>
 
 <style scoped>
