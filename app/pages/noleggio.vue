@@ -99,10 +99,9 @@ const minDate  = tomorrow.toISOString().slice(0, 10);
         <!-- Vehicle grid -->
         <div v-else class="rent-grid mt-48">
           <div
-            v-for="(v, i) in vehicles"
+            v-for="v in vehicles"
             :key="v.id"
             class="rent-card"
-            :data-reveal="i ? `delay-${Math.min(i,5)}` : ''"
           >
             <div class="rent-card-img">
               <img v-if="primaryImage(v)" :src="primaryImage(v)!" :alt="v.name" style="width:100%;height:100%;object-fit:cover;display:block" />
