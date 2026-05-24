@@ -36,14 +36,35 @@
 
             <!-- Personal info fields -->
             <div class="bform-grid">
-              <input v-model="form.first_name"      type="text"  class="bform-input" />
-              <input v-model="form.last_name"        type="text"  class="bform-input" />
-              <input v-model="form.telefono"          type="tel"   class="bform-input" />
-              <input v-model="form.email"             type="email" class="bform-input" />
-              <input v-model="form.modello_veicolo"   type="text"  class="bform-input" />
-              <input v-model="form.targa"             type="text"  class="bform-input" />
+              <div class="bform-field">
+                <label class="bform-label">Nome</label>
+                <input v-model="form.first_name" type="text" class="bform-input" />
+              </div>
+              <div class="bform-field">
+                <label class="bform-label">Cognome</label>
+                <input v-model="form.last_name" type="text" class="bform-input" />
+              </div>
+              <div class="bform-field">
+                <label class="bform-label">Telefono</label>
+                <input v-model="form.telefono" type="tel" class="bform-input" />
+              </div>
+              <div class="bform-field">
+                <label class="bform-label">Email</label>
+                <input v-model="form.email" type="email" class="bform-input" />
+              </div>
+              <div class="bform-field">
+                <label class="bform-label">Modello veicolo</label>
+                <input v-model="form.modello_veicolo" type="text" class="bform-input" />
+              </div>
+              <div class="bform-field">
+                <label class="bform-label">Targa</label>
+                <input v-model="form.targa" type="text" class="bform-input" />
+              </div>
             </div>
-            <textarea v-model="form.messaggio" rows="3" class="bform-input bform-textarea" />
+            <div class="bform-field" style="margin-bottom:12px">
+              <label class="bform-label">Note</label>
+              <textarea v-model="form.messaggio" rows="3" class="bform-input bform-textarea" style="margin-bottom:0" />
+            </div>
             <label class="bform-check">
               <input v-model="form.privacy" type="checkbox" />
               <span>Acconsento al trattamento dei dati personali ai sensi della <a href="/privacy" style="color:var(--navy);text-decoration:underline">Privacy Policy</a></span>
@@ -299,6 +320,8 @@ function statusLabel(s: string) {
 .booking-form-title { font-size:1.6rem; font-weight:700; color:var(--navy-deep); margin-bottom:28px; }
 
 .bform-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+.bform-field { display:flex; flex-direction:column; gap:5px; }
+.bform-label { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:#aaa; }
 
 .bform-input {
   width:100%; border:1px solid #e0e0e0; border-radius:8px; padding:12px 16px;
