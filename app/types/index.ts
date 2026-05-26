@@ -164,7 +164,7 @@ export type VehicleCreate = Omit<
 export type BookingStatus = "pending" | "paid" | "cancelled" | "refunded";
 export type PaymentType = "online" | "offline";
 
-export interface Booking {
+export interface Booking extends InvoiceFields {
   id: string;
   user: string;
   user_first_name: string;
@@ -189,7 +189,29 @@ export interface Booking {
   created_at: string;
 }
 
-export interface BookingCreate {
+// ─── Invoice fields (shared between Booking and BookingCreate) ────────────────
+
+export interface InvoiceFields {
+  invoice_requested: boolean;
+  invoice_recipient_name?: string;
+  invoice_tax_code?: string;
+  invoice_vat_number?: string;
+  invoice_address_street?: string;
+  invoice_address_postal_code?: string;
+  invoice_address_city?: string;
+  invoice_address_province?: string;
+  invoice_is_pa?: boolean;
+  invoice_sdi_code?: string;
+  invoice_pec?: string;
+  invoice_cig?: string;
+  invoice_cup?: string;
+  // Read-only result fields
+  fic_document_id?: number | null;
+  fic_document_url?: string;
+  fic_ei_status?: string;
+}
+
+export interface BookingCreate extends Partial<InvoiceFields> {
   spot: string;
   vehicle?: string | null;
   start_time: string;

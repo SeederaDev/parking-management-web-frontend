@@ -126,12 +126,100 @@
                 <span>Ho preso nota della consegna delle chiavi.</span>
               </label>
             </div>
+            <!-- Fattura elettronica -->
             <div class="bform-info-row">
-              <div class="bform-info-label">Altre Informazioni</div>
-              <label class="bform-check">
+              <div class="bform-info-label">Fatturazione</div>
+              <label class="bform-check" style="margin-bottom:0">
                 <input v-model="form.fattura" type="checkbox" />
-                <span>Richiedi fattura</span>
+                <span>Richiedi fattura elettronica</span>
               </label>
+            </div>
+
+            <!-- Invoice fields — shown only when fattura is checked -->
+            <div v-if="form.fattura" class="bform-invoice-panel">
+              <div class="bform-invoice-title">Dati di fatturazione</div>
+
+              <!-- PA toggle -->
+              <label class="bform-check" style="margin-bottom:16px">
+                <input v-model="invoice.is_pa" type="checkbox" />
+                <span>Il destinatario è una <strong>Pubblica Amministrazione</strong></span>
+              </label>
+
+              <!-- Name + fiscal ID -->
+              <div class="bform-grid" style="margin-bottom:12px">
+                <div class="bform-field">
+                  <label class="bform-label">{{ invoice.is_pa ? 'Denominazione PA' : 'Ragione Sociale / Nome' }} <span class="req">*</span></label>
+                  <input v-model="invoice.recipient_name" type="text" class="bform-input" :placeholder="invoice.is_pa ? 'Comune di Roma' : 'Mario Rossi'" />
+                </div>
+                <div class="bform-field">
+                  <label class="bform-label">Partita IVA{{ !invoice.is_pa ? ' o Codice Fiscale' : '' }} <span class="req">*</span></label>
+                  <input v-model="invoice.vat_number" type="text" class="bform-input" maxlength="20" placeholder="es. 01234567890" />
+                </div>
+                <div v-if="!invoice.is_pa" class="bform-field">
+                  <label class="bform-label">Codice Fiscale</label>
+                  <input v-model="invoice.tax_code" type="text" class="bform-input" maxlength="20" placeholder="es. RSSMRA80A01H501U" />
+                </div>
+              </div>
+
+              <!-- Address -->
+              <div class="bform-grid" style="margin-bottom:12px">
+                <div class="bform-field" style="grid-column:1/-1">
+                  <label class="bform-label">Indirizzo</label>
+                  <input v-model="invoice.address_street" type="text" class="bform-input" placeholder="Via Roma 1" />
+                </div>
+                <div class="bform-field">
+                  <label class="bform-label">CAP</label>
+                  <input v-model="invoice.address_postal_code" type="text" class="bform-input" maxlength="10" placeholder="20100" />
+                </div>
+                <div class="bform-field">
+                  <label class="bform-label">Città</label>
+                  <input v-model="invoice.address_city" type="text" class="bform-input" placeholder="Milano" />
+                </div>
+                <div class="bform-field">
+                  <label class="bform-label">Provincia</label>
+                  <input v-model="invoice.address_province" type="text" class="bform-input" maxlength="5" placeholder="MI" style="text-transform:uppercase" />
+                </div>
+              </div>
+
+              <!-- SDI / PEC routing -->
+              <div class="bform-grid" style="margin-bottom:12px">
+                <div class="bform-field">
+                  <label class="bform-label">
+                    {{ invoice.is_pa ? 'Codice IPA (SDI — 6 caratteri)' : 'Codice SDI (7 caratteri)' }}
+                    <span v-if="!invoice.pec" class="req">*</span>
+                  </label>
+                  <input
+                    v-model="invoice.sdi_code"
+                    type="text"
+                    class="bform-input"
+                    :maxlength="invoice.is_pa ? 6 : 7"
+                    style="text-transform:uppercase"
+                    :placeholder="invoice.is_pa ? 'A1B2C3' : 'ABCDEFG'"
+                  />
+                </div>
+                <div class="bform-field">
+                  <label class="bform-label">
+                    PEC
+                    <span v-if="!invoice.sdi_code" class="req">*</span>
+                    <span v-else style="font-weight:400;color:#bbb"> (alternativa al codice SDI)</span>
+                  </label>
+                  <input v-model="invoice.pec" type="email" class="bform-input" placeholder="ufficio@pec.esempio.it" />
+                </div>
+              </div>
+
+              <!-- CIG / CUP (PA only) -->
+              <div v-if="invoice.is_pa" class="bform-grid" style="margin-bottom:4px">
+                <div class="bform-field">
+                  <label class="bform-label">CIG <span style="font-weight:400;color:#bbb">(opzionale)</span></label>
+                  <input v-model="invoice.cig" type="text" class="bform-input" maxlength="20" placeholder="es. Z1A2B3C4D5" style="text-transform:uppercase" />
+                </div>
+                <div class="bform-field">
+                  <label class="bform-label">CUP <span style="font-weight:400;color:#bbb">(opzionale)</span></label>
+                  <input v-model="invoice.cup" type="text" class="bform-input" maxlength="20" placeholder="es. J11B12000000001" style="text-transform:uppercase" />
+                </div>
+              </div>
+
+              <div v-if="invoiceError" class="bform-error" style="margin-top:10px">{{ invoiceError }}</div>
             </div>
 
             <div v-if="bookingError" class="bform-error">{{ bookingError }}</div>
@@ -186,6 +274,8 @@
 </template>
 
 <script setup lang="ts">
+import type { BookingCreate } from '~/types';
+
 definePageMeta({ layout: "default" });
 
 const route        = useRoute();
@@ -195,15 +285,15 @@ const bookingStore = useBookingStore();
 const { createBooking, fetchBookings, initiateCheckout, cancelBooking, loading: bookingLoading, error: bookingError } = useBookings();
 const { fetchLocations } = useParking();
 
-// ── Query params ──────────────────────────────────────────────────
-const spotId      = computed(() => route.query.spot_id      as string || '');
-const spotType    = computed(() => route.query.spot_type     as string || 'standard');
-const locationId  = computed(() => route.query.location_id   as string || '');
-const startTime   = computed(() => route.query.start_time    as string || '');
-const endTime     = computed(() => route.query.end_time      as string || '');
-const spotIdentifier = computed(() => route.query.spot_identifier as string || '');
+// Query params
+const spotId         = computed(() => route.query.spot_id         as string || '');
+const spotType       = computed(() => route.query.spot_type        as string || 'standard');
+const locationId     = computed(() => route.query.location_id      as string || '');
+const startTime      = computed(() => route.query.start_time       as string || '');
+const endTime        = computed(() => route.query.end_time         as string || '');
+const spotIdentifier = computed(() => route.query.spot_identifier  as string || '');
 
-// ── Form ──────────────────────────────────────────────────────────
+// Booking form
 const form = reactive({
   first_name:        authStore.user?.first_name ?? '',
   last_name:         authStore.user?.last_name  ?? '',
@@ -218,7 +308,64 @@ const form = reactive({
   fattura:           false,
 });
 
-// ── Computed ──────────────────────────────────────────────────────
+// Invoice sub-form (shown when form.fattura = true)
+const invoice = reactive({
+  is_pa:                false,
+  recipient_name:       '',
+  vat_number:           '',
+  tax_code:             '',
+  address_street:       '',
+  address_postal_code:  '',
+  address_city:         '',
+  address_province:     '',
+  sdi_code:             '',
+  pec:                  '',
+  cig:                  '',
+  cup:                  '',
+});
+
+const invoiceError = ref<string | null>(null);
+
+// Reset invoice error whenever the user edits any invoice field
+watch(invoice, () => { invoiceError.value = null; });
+// Clear invoice error when unchecking fattura
+watch(() => form.fattura, (val) => {
+  if (!val) invoiceError.value = null;
+});
+
+/**
+ * Client-side validation of invoice fields.
+ * Mirrors BookingCreateSerializer._validate_invoice on the backend.
+ * Returns an error message string, or null if valid.
+ */
+function validateInvoice(): string | null {
+  if (!form.fattura) return null;
+
+  if (!invoice.recipient_name.trim()) {
+    return 'Inserisci la ragione sociale / nome del destinatario della fattura.';
+  }
+  if (!invoice.vat_number.trim() && !invoice.tax_code.trim()) {
+    return 'Inserisci almeno la Partita IVA o il Codice Fiscale.';
+  }
+
+  const sdi = invoice.sdi_code.trim();
+  const pec = invoice.pec.trim();
+
+  if (!sdi && !pec) {
+    return 'Inserisci il Codice SDI oppure la PEC del destinatario.';
+  }
+  if (sdi) {
+    const expectedLen = invoice.is_pa ? 6 : 7;
+    if (sdi.length !== expectedLen) {
+      return invoice.is_pa
+        ? 'Il codice IPA della Pubblica Amministrazione deve essere di 6 caratteri.'
+        : 'Il codice SDI per privati/aziende deve essere di 7 caratteri.';
+    }
+  }
+  return null;
+}
+
+// Computed
 const locationName = computed(
   () => parkingStore.locations.find(l => String(l.id) === locationId.value)?.name ?? 'Parcheggio'
 );
@@ -252,7 +399,7 @@ const estimatedPrice = computed(() => {
 
 // Treat "2026-05-20T00:00:00" as UTC midnight, never local time
 function toUtcMidnight(s: string): string {
-  const base = s.replace(/Z$/, '').slice(0, 10); // "2026-05-20"
+  const base = s.replace(/Z$/, '').slice(0, 10);
   return `${base}T00:00:00Z`;
 }
 
@@ -265,19 +412,45 @@ function fmtDate(dt: string) {
   });
 }
 
-// ── Actions ───────────────────────────────────────────────────────
+// Actions
 async function confirmBooking() {
   if (!authStore.isAuthenticated) {
     navigateTo(`/login?redirect=${encodeURIComponent(route.fullPath)}`);
     return;
   }
-  const booking = await createBooking({
-    spot:       spotId.value,
-    vehicle:    null,
-    start_time: toUtcMidnight(startTime.value),
-    end_time:   toUtcMidnight(endTime.value),
-    notes:      form.messaggio || undefined,
-  });
+
+  // Validate invoice fields before submitting
+  const invErr = validateInvoice();
+  if (invErr) {
+    invoiceError.value = invErr;
+    return;
+  }
+
+  const payload: BookingCreate = {
+    spot:              spotId.value,
+    vehicle:           null,
+    start_time:        toUtcMidnight(startTime.value),
+    end_time:          toUtcMidnight(endTime.value),
+    notes:             form.messaggio || undefined,
+    invoice_requested: form.fattura,
+  };
+
+  if (form.fattura) {
+    payload.invoice_recipient_name      = invoice.recipient_name.trim()              || undefined;
+    payload.invoice_vat_number          = invoice.vat_number.trim()                  || undefined;
+    payload.invoice_tax_code            = invoice.tax_code.trim()                    || undefined;
+    payload.invoice_address_street      = invoice.address_street.trim()              || undefined;
+    payload.invoice_address_postal_code = invoice.address_postal_code.trim()         || undefined;
+    payload.invoice_address_city        = invoice.address_city.trim()                || undefined;
+    payload.invoice_address_province    = invoice.address_province.trim().toUpperCase() || undefined;
+    payload.invoice_is_pa               = invoice.is_pa;
+    payload.invoice_sdi_code            = invoice.sdi_code.trim().toUpperCase()      || undefined;
+    payload.invoice_pec                 = invoice.pec.trim()                         || undefined;
+    payload.invoice_cig                 = invoice.cig.trim().toUpperCase()           || undefined;
+    payload.invoice_cup                 = invoice.cup.trim().toUpperCase()           || undefined;
+  }
+
+  const booking = await createBooking(payload);
   if (!booking) return;
   navigateTo(`/booking/payment?booking_id=${booking.id}`);
 }
@@ -369,5 +542,20 @@ function statusLabel(s: string) {
   .bform-summary-row { grid-template-columns:1fr 1fr; }
   .bform-sum-col:nth-child(2n) { border-right:none; }
   .bform-sum-col:nth-child(n+3) { border-top:1px solid #e8e8e8; }
+}
+
+/* Invoice panel */
+.bform-invoice-panel {
+  margin-top:4px; padding:20px 24px 16px;
+  background:#f8faff; border:1px solid #dce8ff; border-radius:12px;
+}
+.bform-invoice-title {
+  font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+  color:var(--navy); margin-bottom:14px;
+}
+.req { color:#e53e3e; margin-left:2px; }
+
+@media (max-width:600px) {
+  .bform-invoice-panel { padding:16px; }
 }
 </style>
