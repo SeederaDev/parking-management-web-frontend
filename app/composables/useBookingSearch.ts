@@ -42,7 +42,7 @@ export const useBookingSearch = () => {
   const pricing      = ref<PublicPricing | null>(null);
 
   const dailyRate = computed(() =>
-    pricing.value ? parseFloat(pricing.value.daily_rate) : 15
+    pricing.value ? parseFloat(pricing.value.daily_rate) : 0
   );
 
   const cancellationCutoffHours = computed(() =>
@@ -157,9 +157,7 @@ export const useBookingSearch = () => {
 
   onMounted(async () => {
     fetchLocations();
-    try {
-      pricing.value = await api<PublicPricing>("/tenants/pricing/");
-    } catch { /* use defaults */ }
+    pricing.value = await api<PublicPricing>("/tenants/pricing/");
   });
 
   return {
