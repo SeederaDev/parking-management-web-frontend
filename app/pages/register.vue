@@ -68,22 +68,6 @@
         />
       </div>
 
-      <div>
-        <label
-          class="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider"
-          >Operatore</label
-        >
-        <input
-          v-model="form.tenant_slug"
-          type="text"
-          required
-          class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1B2A6B]/10 focus:border-[#1B2A6B] transition-colors"
-        />
-        <p class="text-xs text-gray-400 mt-1.5">
-          Lo slug del tuo operatore di parcheggio.
-        </p>
-      </div>
-
       <div
         v-if="error"
         class="flex items-start gap-2.5 bg-red-50 border border-red-100 rounded-lg p-3"
@@ -176,7 +160,7 @@ const form = reactive({
   password: "",
   first_name: "",
   last_name: "",
-  tenant_slug: "",
+  tenant_slug: "palmieri-treglia",
 });
 
 async function handleRegister() {
