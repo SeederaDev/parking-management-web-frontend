@@ -71,11 +71,11 @@ const {
             <div class="booking-dates">
               <div class="booking-date-col">
                 <div class="booking-date-label">Ingresso</div>
-                <input v-model="search.start_date" type="date" aria-label="Data ingresso" />
+                <input v-model="search.start_date" type="date" aria-label="Data ingresso" :min="new Date().toISOString().slice(0,10)" />
               </div>
               <div class="booking-date-col">
                 <div class="booking-date-label">Uscita</div>
-                <input v-model="search.end_date" type="date" aria-label="Data uscita" />
+                <input v-model="search.end_date" type="date" aria-label="Data uscita" :min="search.start_date ? (() => { const d = new Date(search.start_date); d.setDate(d.getDate()+1); return d.toISOString().slice(0,10); })() : new Date().toISOString().slice(0,10)" />
               </div>
             </div>
             <div class="booking-vtypes">

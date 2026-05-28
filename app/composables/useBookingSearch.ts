@@ -114,6 +114,13 @@ export const useBookingSearch = () => {
       search.end_date = d.toISOString().slice(0, 10);
     }
 
+    // end_date must be strictly after start_date (minimum 1 night)
+    if (search.end_date <= search.start_date) {
+      const d = new Date(search.start_date);
+      d.setDate(d.getDate() + 1);
+      search.end_date = d.toISOString().slice(0, 10);
+    }
+
     searched.value = false;
     selectedType.value = "";
     parkingStore.setAvailableSpots([]);
